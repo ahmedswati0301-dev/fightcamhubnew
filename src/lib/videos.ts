@@ -18,15 +18,16 @@ import exv5Video from "@/assets/data/exclusive/v5.mp4";
 import exv6Video from "@/assets/data/exclusive/v6.mp4";
 
 // Import poster images
-import poster1 from "@/assets/data/fight/poster1.png";
-import poster2 from "@/assets/data/fight/poster2.png";
-import poster3 from "@/assets/data/fight/poster3.png";
-import poster4 from "@/assets/data/fight/poster4.png";
-import poster5 from "@/assets/data/fight/poster5.png";
-import poster7 from "@/assets/data/fight/poster7.png";
-import poster8 from "@/assets/data/fight/poster8.png";
-import poster9 from "@/assets/data/fight/poster9.png";
-import poster10 from "@/assets/data/fight/poster10.png";
+import poster1 from "@/assets/data/fight/poster9.jpeg";
+import poster2 from "@/assets/data/fight/poster8.jpeg";
+import poster3 from "@/assets/data/fight/poster4.jpeg";
+import poster4 from "@/assets/data/fight/poster5.jpeg";
+import poster5 from "@/assets/data/fight/poster1.jpeg";
+import poster7 from "@/assets/data/fight/poster3.jpeg";
+import poster8 from "@/assets/data/fight/poster4.jpeg";
+import poster9 from "@/assets/data/fight/poster1.jpeg";
+import livePoster1 from "@/assets/data/fight/liveposter1.jpeg";
+import livePoster2 from "@/assets/data/fight/liveposter2.jpeg";
 
 // Import exclusive poster images
 import exPoster1 from "@/assets/data/exclusive/a2.webp";
@@ -81,7 +82,6 @@ const posterImages = [
   poster7,
   poster8,
   poster9,
-  poster10,
 ];
 
 // Exclusive poster images array
@@ -143,7 +143,7 @@ export const liveVideos: VideoItem[] = [
     views: "31.7K",
     tag: "Co-Main",
     src: live2Video,
-    poster: poster("live-2", 0),
+    poster: livePoster1,
     link: "#",
     reactions: { "❤️": 8600, "🔥": 9800, "😮": 3200, "👊": 11500, "😂": 950 },
   },
@@ -155,7 +155,7 @@ export const liveVideos: VideoItem[] = [
     views: "18.9K",
     tag: "Prelims",
     src: live3Video,
-    poster: poster("live-3", 1),
+    poster: livePoster2,
     link: "#",
     reactions: { "❤️": 5200, "🔥": 6700, "😮": 2100, "👊": 8900, "😂": 680 },
   },
