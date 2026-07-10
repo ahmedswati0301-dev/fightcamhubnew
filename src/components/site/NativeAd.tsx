@@ -7,25 +7,38 @@ interface NativeAdProps {
 
 export function NativeAd({ containerId, scriptUrl }: NativeAdProps) {
   useEffect(() => {
-    // Load the external ad script once per unique script URL
-    const existingScript = document.querySelector(
-      `script[src="${scriptUrl}"]`
-    );
-    
-    if (!existingScript) {
+    if (typeof window === "undefined") return;
+
+    const renderAd = () => {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      const existingScripts = Array.from(
+        document.querySelectorAll(`script[data-native-ad-slot="${containerId}"]`)
+      );
+      existingScripts.forEach((script) => script.remove());
+
       const script = document.createElement("script");
       script.src = scriptUrl;
       script.async = true;
       script.setAttribute("data-cfasync", "false");
+      script.setAttribute("data-native-ad-slot", containerId);
       document.body.appendChild(script);
+    };
 
-      return () => {
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-      };
-    }
-  }, [scriptUrl]);
+    renderAd();
+    const intervalId = window.setInterval(renderAd, 30000 + Math.floor(Math.random() * 5000));
+
+    return () => {
+      window.clearInterval(intervalId);
+      const existingScripts = Array.from(
+        document.querySelectorAll(`script[data-native-ad-slot="${containerId}"]`)
+      );
+      existingScripts.forEach((script) => script.remove());
+    };
+  }, [containerId, scriptUrl]);
 
   return (
     <div className="relative py-10">

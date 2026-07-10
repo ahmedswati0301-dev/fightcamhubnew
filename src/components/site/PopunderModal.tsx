@@ -1,197 +1,128 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+﻿import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 
-const POPUNDER_SCRIPT_URL =
-  "https://consciousdunkvastly.com/79/7d/b0/797db0781a89da82e23e454fdda499db.js";
-let popunderInjected = false;
+interface FloatingAdProps {
+  /** Delay before the ad slides in (ms) */
+  delay?: number;
+  width?: number;
+  height?: number;
+}
 
-export default function PopunderModal({ delayMs = 25000 }: { delayMs?: number }) {
-  const [mounted, setMounted] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const timerRef = useRef<number | null>(null);
-  const scriptRef = useRef<HTMLScriptElement | null>(null);
+/**
+ * Premium floating ad card that gracefully slides up from bottom-right.
+ * Dismissible, remembers dismissal for the session, sits above the sticky
+ * footer, glassmorphism styling.
+ *
+ * SLOT D - FLOATING POPUNDER AD WITH SCRIPT INTEGRATION
+ */
+export default function FloatingAd({
+  delay = 3500,
+  width = 300,
+  height = 250,
+}: FloatingAdProps) {
+  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scriptLoaded = useRef(false);
 
-  const SESSION_KEY = "premium_popunder_seen";
-  const triggerDelayMs = Math.max(delayMs, 25000);
-
+  // Handle visibility delay
   useEffect(() => {
-    setMounted(true);
     if (typeof window === "undefined") return;
-
-    if (popunderInjected) return;
-    if (sessionStorage.getItem(SESSION_KEY)) {
-      popunderInjected = true;
+    if (sessionStorage.getItem("floating-ad-dismissed") === "1") {
+      setDismissed(true);
       return;
     }
+    const t = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
 
-    const cleanupTimer = () => {
-      if (timerRef.current) {
-        window.clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
-    };
-
-    // Open popunder after 25 seconds of the user being on the site
-    timerRef.current = window.setTimeout(() => {
-      if (popunderInjected) return;
-      setIsVisible(true);
-    }, triggerDelayMs);
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        cleanupTimer();
-      }
-    });
-    window.addEventListener("beforeunload", cleanupTimer);
-
-    return () => {
-      window.removeEventListener("beforeunload", cleanupTimer);
-      cleanupTimer();
-    };
-  }, [delayMs]);
-
+  // Handle dynamic script injection precisely when visible and container is ready
   useEffect(() => {
-    if (!isVisible || typeof window === "undefined") return;
-    if (popunderInjected) return;
+    if (!visible || dismissed || scriptLoaded.current || !containerRef.current) return;
 
-    const existing = Array.from(document.scripts).find((script) =>
-      Boolean(script.src && script.src.includes("797db0781a89da82e23e454fdda499db.js"))
-    );
-    if (existing) {
-      popunderInjected = true;
-      sessionStorage.setItem(SESSION_KEY, "1");
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = POPUNDER_SCRIPT_URL;
-    script.async = true;
-    script.type = "text/javascript";
-    script.dataset.popunder = "true";
-    scriptRef.current = script;
-
-    const appendScript = () => {
-      if (scriptRef.current && !document.body.contains(scriptRef.current)) {
-        document.body.appendChild(scriptRef.current);
-      }
-    };
-
-    appendScript();
-
-    return () => {
-      if (scriptRef.current && scriptRef.current.parentNode) {
-        scriptRef.current.parentNode.removeChild(scriptRef.current);
-        scriptRef.current = null;
-      }
-    };
-  }, [isVisible]);
-
-  const closeModal = () => {
-    setIsClosing(true);
-    if (!popunderInjected) {
-      popunderInjected = true;
-      try {
-        sessionStorage.setItem(SESSION_KEY, "1");
-      } catch (error) {}
-    }
-    window.setTimeout(() => {
-      setIsVisible(false);
-      setIsClosing(false);
-      if (scriptRef.current && scriptRef.current.parentNode) {
-        scriptRef.current.parentNode.removeChild(scriptRef.current);
-        scriptRef.current = null;
-      }
-    }, 300);
-  };
-
-  const handleClaim = () => {
-    closeModal();
-  };
-
-  if (!mounted) return null;
-  if (!isVisible) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center px-4 py-6 font-sans">
-      {/* Dark Blur Overlay matching the site's dark aesthetic */}
-      <div
-        className={`absolute inset-0 bg-neutral-950/70 backdrop-blur-sm transition-opacity duration-300 ${
-          isClosing ? "opacity-0" : "opacity-100"
-        }`}
-        onClick={closeModal}
-      />
+    try {
+      scriptLoaded.current = true;
       
-      {/* Container Card with fully transparent background and glassmorphic blur */}
-      <div
-        className={`relative w-full max-w-xl transform transition-all duration-300 ${
-          isClosing ? "opacity-0 scale-95" : "opacity-100 scale-100"
-        }`}
-      >
-        {/* Modal Main Body: Changed to high-end transparent bg-neutral-950/40 */}
-        <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-neutral-950/40 px-6 py-10 sm:px-10 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.8)] backdrop-blur-md">
-          
-          {/* Subtle Red Ambient Light in the background */}
-          <div className="absolute -left-10 -top-10 h-32 w-32 rounded-full bg-red-600/15 blur-3xl pointer-events-none" />
+      // 1. Clear placeholder text safely
+      containerRef.current.innerHTML = "";
 
-          {/* Clean Circular Close Button */}
+      // 2. Define standard window config array or local global configuration object
+      (window as any).atOptions = {
+        key: "58b13e415b520b2923f27f4d5d6a5a58",
+        format: "iframe",
+        height: 250,
+        width: 300,
+        params: {},
+      };
+
+      // 3. Create script tag and append safely to component container element
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://consciousdunkvastly.com/58b13e415b520b2923f27f4d5d6a5a58/invoke.js";
+      
+      containerRef.current.appendChild(script);
+    } catch (err) {
+      console.error("Adsterra Slot D script failed to initialize:", err);
+    }
+  }, [visible, dismissed]);
+
+  if (dismissed) return null;
+
+  const close = () => {
+    // Open the link in a new tab
+    window.open("https://consciousdunkvastly.com/uh4qrcst?key=f36ee9a5c8a14e25b36806eca7375ac7", "_blank");
+    // Hide the popup
+    setVisible(false);
+    setDismissed(true);
+    try {
+      sessionStorage.setItem("floating-ad-dismissed", "1");
+    } catch {}
+  };
+
+  return (
+    <div
+      className={`fixed z-40 left-1/2 -translate-x-1/2 bottom-[120px] transition-all duration-500 ease-out ${
+        visible
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-6 pointer-events-none"
+      }`}
+      role="complementary"
+      aria-label="Sponsored"
+    >
+      {/* Glow halo */}
+      <div className="pointer-events-none absolute -inset-4 rounded-3xl bg-[radial-gradient(ellipse_at_center,oklch(0.65_0.25_340/0.35),transparent_70%)] blur-2xl" />
+
+      <div className="relative rounded-2xl border border-zinc-800/80 bg-zinc-950/85 backdrop-blur-xl p-2 pt-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.9),0_0_40px_-10px_oklch(0.65_0.25_340/0.5)]">
+        {/* Header bar */}
+        <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-2.5 py-1">
+          <span className="text-[9px] uppercase tracking-[0.3em] text-zinc-500 font-sans">
+            Sponsored
+          </span>
           <button
-            onClick={closeModal}
-            aria-label="Close offer"
-            className="absolute right-5 top-5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-neutral-400 transition-all hover:bg-white/10 hover:text-white"
+            onClick={close}
+            aria-label="Close ad"
+            className="group flex h-5 w-5 items-center justify-center rounded-full bg-zinc-800/80 hover:bg-zinc-700 transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="h-3 w-3 text-zinc-400 group-hover:text-white" />
           </button>
+        </div>
 
-          {/* Live Status Pill Badge */}
-          <div className="flex justify-center mb-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-neutral-900 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
-              STREAMING LIVE 24/7
-            </div>
-          </div>
-
-          {/* Heading using the signature bold accent split */}
-          <h2 className="mb-4 text-center text-2xl font-black uppercase tracking-tight text-white sm:text-3xl">
-            EVERY STREAM . <span className="text-red-600">EVERY FINISH</span>
-          </h2>
-          
-          <p className="mx-auto mb-8 max-w-sm text-center text-xs leading-relaxed text-neutral-200 sm:text-sm">
-            Unlock cage-side access for live fight feeds, instant replays, and binge premium highlight reels in stunning high-bitrate quality.
-          </p>
-
-          {/* Action Row replicating the round pill button shapes exactly */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
-            {/* Primary Action Button - Matches "Live Fights" button style */}
-            <button
-              onClick={handleClaim}
-              className="inline-flex items-center justify-center rounded-full bg-red-600 px-8 py-3.5 text-sm font-bold tracking-wide text-white transition-all duration-200 hover:bg-red-700 active:scale-[0.99] w-full sm:w-auto min-w-[170px]"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 mr-2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653Z" />
-              </svg>
-              Watch Live
-            </button>
-            
-            {/* Secondary Action Button - Matches "Browse More" button style */}
-            <button
-              onClick={closeModal}
-              className="inline-flex items-center justify-center rounded-full bg-white/90 px-8 py-3.5 text-sm font-bold tracking-wide text-neutral-900 transition-all duration-200 hover:bg-white w-full sm:w-auto min-w-[170px]"
-            >
-              Browse More
-            </button>
-          </div>
-
-          {/* Clean, Non-intrusive Verification Subtext */}
-          <div className="mt-8 flex items-center justify-center gap-1.5 text-[11px] text-neutral-400">
-            <span>🔥</span>
-            <span>More Viral Clips Below</span>
+        {/* Ad content - Managed by containerRef */}
+        <div
+          ref={containerRef}
+          className="flex items-center justify-center overflow-hidden rounded-lg bg-zinc-950/60"
+          style={{ width, height }}
+        >
+          <div className="text-center">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-600">
+              Ad Slot D
+            </p>
+            <p className="mt-1 text-xs text-zinc-500">
+              {width} × {height}
+            </p>
           </div>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
