@@ -18,7 +18,8 @@ function ScrollToTop() {
 export default function App() {
   return (
     <ThemeProvider>
-      <PopunderModal delayMs={25000} />
+      {/* Floating popunder ad is disabled for now; re-enable this component when needed. */}
+      {/* <PopunderModal delayMs={25000} /> */}
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />

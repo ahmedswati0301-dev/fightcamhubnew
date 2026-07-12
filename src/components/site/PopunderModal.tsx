@@ -13,7 +13,8 @@ interface FloatingAdProps {
  * Dismissible, remembers dismissal for the session, sits above the sticky
  * footer, glassmorphism styling.
  *
- * SLOT D - FLOATING POPUNDER AD WITH SCRIPT INTEGRATION
+ * SLOT D - FLOATING POPUNDER AD WITH SCRIPT INTEGRATION.
+ * This floating ad component is disabled for now and can be reused when needed.
  */
 export default function FloatingAd({
   delay = 3500,
