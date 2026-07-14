@@ -2,7 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "@/lib/theme";
-import PopunderModal from "@/components/site/PopunderModal";
+import StickyBottomAd from "@/components/site/StickyBottomAd";
 import Home from "@/pages/Home";
 import Exclusive from "@/pages/Exclusive";
 import NotFound from "@/pages/NotFound";
@@ -18,14 +18,15 @@ function ScrollToTop() {
 export default function App() {
   return (
     <ThemeProvider>
-      {/* Floating popunder ad is disabled for now; re-enable this component when needed. */}
-      {/* <PopunderModal delayMs={25000} /> */}
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/exclusive-videos" element={<Exclusive />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <div className="min-h-screen pb-[90px]">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/exclusive-videos" element={<Exclusive />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+      <StickyBottomAd />
       <Analytics />
     </ThemeProvider>
   );
