@@ -1,85 +1,82 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Link2, Radio, ChevronDown } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+declare global {
+  interface Window {
+    atOptions?: {
+      key: string;
+      format: string;
+      height: number;
+      width: number;
+      params: Record<string, unknown>;
+    };
+  }
+}
 
 interface HeroProps {
-  eyebrow: string;
-  title: string;
-  highlight: string;
-  description: string;
   image: string;
   browseTo: "/" | "/exclusive-videos";
-  browseLabel: string;
   monetizationUrl?: string;
-  liveButtonLabel?: string;
 }
 
 export function Hero({
-  eyebrow,
-  title,
-  highlight,
-  description,
   image,
   browseTo,
-  browseLabel,
   monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12",
-  liveButtonLabel = "Live Fights",
 }: HeroProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const touchStartY = useRef<number | null>(null);
-
-  function scrollToTarget() {
-    const chat = document.getElementById("live-chat");
-    const live = document.getElementById("live");
-    const target = chat || live;
-    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  function onTouchStart(e: React.TouchEvent) {
-    touchStartY.current = e.touches[0].clientY;
-  }
-
-  function onTouchEnd(e: React.TouchEvent) {
-    if (touchStartY.current == null) return;
-    const endY = e.changedTouches[0].clientY;
-    const delta = touchStartY.current - endY;
-    // if user swiped up or down enough, trigger scroll
-    if (Math.abs(delta) > 50) {
-      scrollToTarget();
-    }
-    touchStartY.current = null;
-  }
+  const adSlotRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Preload hero image for immediate display
     const img = new Image();
     img.onload = () => setImageLoaded(true);
     img.src = image;
   }, [image]);
 
   useEffect(() => {
-    // Load external ad script
-    const script = document.createElement("script");
-    script.src = "https://consciousdunkvastly.com/8fcc7e9263c3c787815ab520ed8daf12/invoke.js";
-    script.async = true;
-    script.setAttribute("data-cfasync", "false");
-    document.body.appendChild(script);
+    const optionsScript = document.createElement("script");
+    optionsScript.type = "text/javascript";
+    optionsScript.text = `window.atOptions = ${JSON.stringify({
+      key: "27b27fef752e1fb17d505105a33cd700",
+      format: "iframe",
+      height: 90,
+      width: 728,
+      params: {},
+    })};`;
+
+    const externalScript = document.createElement("script");
+    externalScript.type = "text/javascript";
+    externalScript.src = "https://www.highperformanceformat.com/27b27fef752e1fb17d505105a33cd700/invoke.js";
+    externalScript.async = true;
+    externalScript.setAttribute("data-cfasync", "false");
+
+    if (adSlotRef.current) {
+      adSlotRef.current.appendChild(optionsScript);
+      adSlotRef.current.appendChild(externalScript);
+    }
 
     return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
+      if (adSlotRef.current) {
+        if (adSlotRef.current.contains(optionsScript)) {
+          adSlotRef.current.removeChild(optionsScript);
+        }
+        if (adSlotRef.current.contains(externalScript)) {
+          adSlotRef.current.removeChild(externalScript);
+        }
       }
+      delete window.atOptions;
     };
   }, []);
+
   return (
     <section className="relative overflow-hidden">
-      {/* Background image - Optimized for fast loading */}
       <div className="absolute inset-0">
         <img
           src={image}
           alt="Hero background"
           width={1600}
-          height={1024}
+          height={900}
           loading="eager"
           decoding="async"
           fetchPriority="high"
@@ -88,50 +85,63 @@ export function Hero({
             imageLoaded ? "opacity-100" : "opacity-0"
           }`}
         />
-        <div className="absolute inset-0 bg-background/55" />
-        <div className="absolute inset-0" style={{ backgroundImage: "var(--gradient-hero)" }} />
+        <div className="absolute inset-0 bg-black/75" />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 15% 15%, rgba(248,113,113,0.2), transparent 22%), radial-gradient(circle at 85% 20%, rgba(59,130,246,0.14), transparent 18%)",
+          }}
+        />
       </div>
 
-      <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="container-site relative pb-4 pt-12 sm:pt-14 lg:pt-16 flex items-start justify-center">
-        <div className="max-w-2xl text-center">
-          <span className="section-eyebrow live-dot gap-2 justify-center inline-flex">{eyebrow}</span>
-          <h1 className="mt-1 text-2xl font-bold uppercase leading-[1.05] sm:text-3xl lg:text-4xl">
-            {title} <span className="text-gradient">{highlight}</span>
-          </h1>
-          <p className="mt-4 max-w-xl text-sm text-muted-foreground sm:text-base mx-auto">{description}</p>
-
-          <div className="mt-7 flex flex-col gap-2 sm:flex-row sm:gap-2 sm:items-center sm:justify-center">
-            <a
-              href={monetizationUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-primary px-6 py-3.5 text-base font-bold text-primary-foreground shadow-glow transition hover:opacity-90 active:scale-95"
-            >
-              <Radio className="h-5 w-5" /> {liveButtonLabel}
-            </a>
-            <Link
-              to={browseTo}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card/70 px-6 py-3.5 text-base font-bold text-foreground backdrop-blur transition hover:border-primary active:scale-95"
-            >
-              {browseLabel} <ChevronRight className="h-5 w-5" />
-            </Link>
+      <div className="container-site relative mt-16 py-8 sm:mt-0 sm:py-10 lg:py-14">
+        <div className="mx-auto w-full max-w-[1000px] px-4 sm:px-6">
+          <div className="mb-6 flex justify-center">
+            <div className="flex h-[90px] w-full max-w-[728px] items-center justify-center rounded-2xl border border-white/10 bg-slate-900/90 px-4 text-sm font-semibold text-white shadow-[0_20px_60px_rgba(0,0,0,0.35)] sm:text-base">
+              <div ref={adSlotRef} className="flex h-full w-full items-center justify-center" />
+            </div>
           </div>
+          <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/95 shadow-[0_40px_120px_rgba(0,0,0,0.65)] backdrop-blur-xl">
+            <div className="relative aspect-[16/9]">
+              <img
+                src={image}
+                alt="Video preview"
+                className="absolute inset-0 h-full w-full object-cover object-center brightness-90"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-          <div className="mt-3 flex justify-center">
-            <button onClick={scrollToTarget} aria-label="Scroll to live" className="flex flex-col items-center gap-2 animate-bounce">
-              <p className="text-xs text-muted-foreground text-center">🔥 More Viral Clips Below ↓</p>
-              <ChevronDown className="h-5 w-5 text-primary" />
-            </button>
-          </div>
-        </div>
-      </div>
+              <div className="absolute inset-x-0 top-4 px-4 sm:px-6">
+                <div className="inline-flex items-center gap-2 rounded-full bg-red-600/95 px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-red-500/25 sm:px-4">
+                  <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse" />
+                  Live Event Running Now
+                </div>
+              </div>
 
-      {/* Native ad unit */}
-      <div className="relative pb-6">
-        <div className="container-site">
-          <div className="flex w-full flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-4 backdrop-blur-sm">
-            <div id="container-8fcc7e9263c3c787815ab520ed8daf12" className="min-h-[240px] w-full flex items-center justify-center">
-              <p className="text-xs text-muted-foreground">Loading premium ad...</p>
+              <a
+                href={monetizationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-x-0 top-1/2 mx-auto flex h-24 w-24 -translate-y-1/2 items-center justify-center rounded-full bg-red-600 text-white shadow-[0_0_70px_rgba(239,68,68,0.55)] transition-transform duration-300 hover:scale-105 sm:h-28 sm:w-28"
+              >
+                <span className="absolute inset-0 rounded-full bg-red-500/30 blur-2xl" />
+                <span className="relative text-[2.3rem] font-black sm:text-[3rem]">▶</span>
+              </a>
+            </div>
+            <div className="border-t border-white/10 bg-[#09050a]/90 p-5 sm:p-6">
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-red-400 sm:text-sm">
+                  Live Stream
+                </p>
+                <a
+                  href={monetizationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full max-w-[420px] items-center justify-center rounded-[1.5rem] bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 text-center text-base font-black uppercase tracking-[0.16em] text-white shadow-[0_24px_70px_rgba(239,68,68,0.45)] transition hover:from-red-700 hover:to-red-800 active:scale-[0.98] sm:text-lg"
+                >
+                  Watch Live Stream
+                </a>
+              </div>
             </div>
           </div>
         </div>

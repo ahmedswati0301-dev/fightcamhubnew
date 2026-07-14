@@ -12,9 +12,9 @@ export default function Home() {
       />
       <FightPage
         hero={{
-          eyebrow: "Streaming Live 24/7",
-          title: "Every Strike . ",
-          highlight: "Every Finish",
+          eyebrow: "LIVE EVENT RUNNING NOW",
+          title: "STREET FIGHT. ",
+          highlight: " VIRAL KNOCKOUTS",
           description:
             "FightCam Hub puts you cage-side for live fights, replay the biggest knockouts, and binge premium highlight reels — all in one place.",
           image: heroImage,
