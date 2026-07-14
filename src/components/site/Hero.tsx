@@ -35,6 +35,10 @@ export function Hero({
   }, [image]);
 
   useEffect(() => {
+    if (!adSlotRef.current) return;
+
+    adSlotRef.current.innerHTML = "";
+
     const optionsScript = document.createElement("script");
     optionsScript.type = "text/javascript";
     optionsScript.text = `window.atOptions = ${JSON.stringify({
@@ -51,19 +55,15 @@ export function Hero({
     externalScript.async = true;
     externalScript.setAttribute("data-cfasync", "false");
 
-    if (adSlotRef.current) {
-      adSlotRef.current.appendChild(optionsScript);
-      adSlotRef.current.appendChild(externalScript);
-    }
+    document.body.appendChild(optionsScript);
+    adSlotRef.current.appendChild(externalScript);
 
     return () => {
-      if (adSlotRef.current) {
-        if (adSlotRef.current.contains(optionsScript)) {
-          adSlotRef.current.removeChild(optionsScript);
-        }
-        if (adSlotRef.current.contains(externalScript)) {
-          adSlotRef.current.removeChild(externalScript);
-        }
+      if (document.body.contains(optionsScript)) {
+        document.body.removeChild(optionsScript);
+      }
+      if (adSlotRef.current && adSlotRef.current.contains(externalScript)) {
+        adSlotRef.current.removeChild(externalScript);
       }
       delete window.atOptions;
     };
