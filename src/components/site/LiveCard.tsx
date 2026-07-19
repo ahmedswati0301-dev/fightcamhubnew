@@ -143,7 +143,7 @@ export const LiveCard = memo(function LiveCard({ video, monetizationUrl = "https
       `}</style>
 
       {/* Tall Media Feed Container */}
-      <div className="relative w-full h-[430px] sm:h-[490px] overflow-hidden bg-black">
+      <div className="relative w-full h-[430px] sm:h-[490px] overflow-hidden bg-black z-10">
         <video
           ref={videoRef}
           className="h-full w-full object-cover"
@@ -235,7 +235,7 @@ export const LiveCard = memo(function LiveCard({ video, monetizationUrl = "https
       </div>
 
       {/* Action Bar Layout Bundle */}
-      <div className="px-4 pt-4 flex items-center justify-between bg-card">
+      <div className="px-4 pt-4 flex items-center justify-between bg-card z-10 relative">
         {/* Left Side Icons Bundle */}
         <div className="flex items-center gap-5">
           <button 
@@ -295,7 +295,7 @@ export const LiveCard = memo(function LiveCard({ video, monetizationUrl = "https
       </div>
 
       {/* Counter block */}
-      <div className="px-4 pb-4 pt-2 bg-card">
+      <div className="px-4 pb-4 pt-2 bg-card z-10 relative">
         <span className="text-sm font-bold text-foreground">
           {formattedLikes} likes
         </span>

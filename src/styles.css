@@ -181,3 +181,23 @@
 .reaction-float {
   animation: float-up 1.6s ease-out forwards;
 }
+
+/* Exclusive live card rotating animation */
+@keyframes rotate-circle {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Hero section card animations - Instagram style */
+.live-hero-rotate {
+  animation: rotate-circle 8s linear infinite;
+  transform-origin: center;
+}
+
+.exclusive-hero-rotate {
+  animation: rotate-circle 6s linear infinite;
+  transform-origin: center;
+  box-shadow: 
+    0 0 40px rgba(239, 68, 68, 0.6),
+    inset 0 0 20px rgba(239, 68, 68, 0.15) !important;
+}
