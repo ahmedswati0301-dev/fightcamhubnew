@@ -24,6 +24,7 @@ export default function Exclusive() {
           liveButtonLabel: "Live Call",
         }}
         live={exclusiveLive}
+        liveLimit={5}
         trending={exclusiveTrending}
         showPosterOverlay={true}
         trendingHeading={{

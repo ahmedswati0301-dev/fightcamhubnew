@@ -313,7 +313,7 @@ export const categories: Category[] = [
 export const exclusiveLive: VideoItem[] = [
   {
     id: "xlive-1",
-    title: "PPV Main Event — Members LIVE",
+    title: "Ava — Main Event LIVE",
     channel: "Exclusive",
     duration: "12:04",
     views: "12.4K",
@@ -325,7 +325,7 @@ export const exclusiveLive: VideoItem[] = [
   },
   {
     id: "xlive-2",
-    title: "Backstage Walkout Cam LIVE",
+    title: "Luna — Walkout Cam LIVE",
     channel: "Exclusive",
     duration: "12:04",
     views: "8.9K",
@@ -337,7 +337,7 @@ export const exclusiveLive: VideoItem[] = [
   },
   {
     id: "xlive-3",
-    title: "Coaches Corner LIVE Feed",
+    title: "Mia — Corner Cam LIVE",
     channel: "Exclusive",
     duration: "12:04",
     views: "5.2K",
@@ -346,6 +346,30 @@ export const exclusiveLive: VideoItem[] = [
     poster: exclusivePoster("xlive-3", 2),
     link: "#",
     reactions: { "❤️": 2300, "🔥": 3100, "😮": 980, "👊": 4200, "😂": 340 },
+  },
+  {
+    id: "xlive-4",
+    title: "Nina — VIP Lounge LIVE",
+    channel: "Exclusive",
+    duration: "12:04",
+    views: "9.1K",
+    tag: "VIP",
+    src: exv4Video,
+    poster: exclusivePoster("xlive-4", 3),
+    link: "#",
+    reactions: { "❤️": 5400, "🔥": 6300, "😮": 2100, "👊": 7600, "😂": 620 },
+  },
+  {
+    id: "xlive-5",
+    title: "Zara — Backstage LIVE",
+    channel: "Exclusive",
+    duration: "12:04",
+    views: "7.8K",
+    tag: "Backstage",
+    src: exv5Video,
+    poster: exclusivePoster("xlive-5", 4),
+    link: "#",
+    reactions: { "❤️": 4800, "🔥": 5600, "😮": 1800, "👊": 6800, "😂": 510 },
   },
 ];
 

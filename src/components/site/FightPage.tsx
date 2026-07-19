@@ -21,6 +21,7 @@ interface FightPageProps {
     liveButtonLabel?: string;
   };
   live: VideoItem[];
+  liveLimit?: number;
   trending: VideoItem[];
   trendingHeading: { eyebrow: string; title: string; description: string };
   monetizationUrl?: string;
@@ -33,6 +34,7 @@ const DEFAULT_MONETIZATION_URL = "https://consciousdunkvastly.com/hu3d2ui1?key=c
 export function FightPage({ 
   hero, 
   live, 
+  liveLimit,
   trending, 
   trendingHeading, 
   monetizationUrl = DEFAULT_MONETIZATION_URL,
@@ -44,7 +46,12 @@ export function FightPage({
       <Navbar />
 
       <main className="flex-1">
-        <Hero {...hero} monetizationUrl={monetizationUrl} />
+        <Hero {...hero} monetizationUrl={monetizationUrl} liveStreams={live.slice(0, 5)} />
+
+        <NativeAd 
+          containerId="container-7d51d72e5c329b69928a15c5f0b41428" 
+          scriptUrl="https://pl29786100.effectivecpmnetwork.com/7d51d72e5c329b69928a15c5f0b41428/invoke.js"
+        />
 
         {/* LIVE SECTION */}
         <section id="live" className="container-site scroll-mt-20 py-12 sm:py-16">
@@ -54,17 +61,11 @@ export function FightPage({
             description="Multiple cage cams streaming right now. React in real time as the action unfolds."
           />
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {live.slice(0, 3).map((v, index) => (
+            {live.slice(0, liveLimit ?? 3).map((v, index) => (
               <LiveCard key={v.id} video={v} monetizationUrl={monetizationUrl} autoPlay={index === 0} />
             ))}
           </div>
         </section>
-
-        {/* Ad after Live */}
-        <NativeAd 
-          containerId="container-7d51d72e5c329b69928a15c5f0b41428" 
-          scriptUrl="https://pl29786100.effectivecpmnetwork.com/7d51d72e5c329b69928a15c5f0b41428/invoke.js"
-        />
 
         {/* TRENDING SECTION */}
         <section className="container-site py-12 sm:py-16">
