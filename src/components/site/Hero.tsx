@@ -124,28 +124,26 @@ export function Hero({
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
               <div className="absolute inset-x-0 top-6 px-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.28em] text-red-200 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
-                  <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-red-500" /> Live Event Running Now
+                <div className="inline-flex items-center gap-2 rounded-full bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                  <span className="h-2 w-2 rounded-full bg-white animate-pulse" /> Live
                 </div>
-              </div>
-
-              <div className="absolute inset-x-0 top-1/4 px-6 text-center">
-                <p className="text-sm uppercase tracking-[0.35em] text-red-300">{eyebrow}</p>
-                <h1 className="mt-4 text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
-                  {title} <span className="text-red-500">{highlight}</span>
-                </h1>
-                <p className="mx-auto mt-4 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base sm:leading-8">
-                  {description}
-                </p>
               </div>
 
               <button
                 type="button"
                 onClick={() => window.open(monetizationUrl, "_blank")}
-                className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-red-600/95 p-6 text-white shadow-[0_0_80px_rgba(239,68,68,0.45)] transition hover:scale-105"
+                className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 p-5 text-white shadow-[0_0_60px_rgba(168,85,247,0.6)] transition hover:scale-110"
+                aria-label="Play video"
               >
-                <span className="text-4xl font-black">▶</span>
+                <span className="text-3xl font-black ml-1">▶</span>
               </button>
+
+              <div className="absolute inset-x-0 bottom-0 px-6 py-6 bg-gradient-to-t from-black via-black/70 to-transparent">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-400/80 mb-2">{eyebrow}</p>
+                <h2 className="text-xl font-bold text-white sm:text-2xl leading-tight">
+                  {title} <span className="text-red-500">{highlight}</span>
+                </h2>
+              </div>
 
               <div className="absolute inset-x-0 bottom-6 px-6">
               </div>
