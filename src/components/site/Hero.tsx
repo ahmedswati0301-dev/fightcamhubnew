@@ -88,22 +88,47 @@ export function Hero({
               const isExclusive = stream.id.startsWith("xlive-");
               const neonColor = neonColors[index % neonColors.length];
               return (
-              <div key={stream.id} className="flex shrink-0 flex-col items-center gap-2 text-center">
-                <div className={`relative flex h-24 w-24 items-center justify-center rounded-full bg-black/40 p-1 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.05] ${isExclusive ? "exclusive-hero-rotate" : "live-hero-rotate"}`} style={{
-                  border: `4px solid ${neonColor.border}`,
-                  boxShadow: `0 0 50px ${neonColor.glow}, 0 0 80px ${neonColor.glow}80, inset 0 0 20px ${neonColor.glow}40`
-                }}>
-                  <img
-                    src={stream.poster}
-                    alt={stream.title}
-                    className="h-full w-full rounded-full object-cover"
-                  />
+              <div
+                key={stream.id}
+                className="flex shrink-0 flex-col items-center gap-2 text-center"
+              >
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    if (stream.link && stream.link !== "#") {
+                      window.open(stream.link, "_blank");
+                    } else {
+                      const el = document.getElementById("live");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      if (stream.link && stream.link !== "#") {
+                        window.open(stream.link, "_blank");
+                      } else {
+                        const el = document.getElementById("live");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }
+                  }}
+                  className={`relative flex h-24 w-24 cursor-pointer items-center justify-center rounded-full bg-black/40 p-1 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.05] ${isExclusive ? "exclusive-hero-rotate" : "live-hero-rotate"}`}
+                  style={{
+                    border: `4px solid ${neonColor.border}`,
+                    boxShadow: `0 0 50px ${neonColor.glow}, 0 0 80px ${neonColor.glow}80, inset 0 0 20px ${neonColor.glow}40`,
+                  }}
+                >
+                  <img src={stream.poster} alt={stream.title} className="h-full w-full rounded-full object-cover" />
                   <div className="pointer-events-none absolute inset-0 rounded-full border border-white/20 bg-gradient-to-b from-white/10 via-transparent to-black/30" />
                   {isExclusive && (
-                    <div className="pointer-events-none absolute -inset-1 rounded-full opacity-70" style={{
-                      background: `conic-gradient(from 0deg, ${neonColor.border}, ${neonColor.glow}40, ${neonColor.border})`,
-                      animation: "rotate-circle 4s linear infinite"
-                    }} />
+                    <div
+                      className="pointer-events-none absolute -inset-1 rounded-full opacity-70"
+                      style={{
+                        background: `conic-gradient(from 0deg, ${neonColor.border}, ${neonColor.glow}40, ${neonColor.border})`,
+                        animation: "rotate-circle 4s linear infinite",
+                      }}
+                    />
                   )}
                 </div>
                 <span className={`max-w-[78px] text-[0.7rem] font-bold uppercase tracking-[0.24em] ${isExclusive ? "text-red-300" : "text-slate-300"}`}>
